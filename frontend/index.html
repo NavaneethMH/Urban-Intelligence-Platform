@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#070b0e" />
+  <meta name="description" content="INNOVEXA AI-Powered Mobile Urban Intelligence Platform — Real-time GIS command-and-control for Bengaluru's public transport fleet. Problem Statement 26124, SIH 2025." />
+  <title>INNOVEXA — AI-Powered Mobile Urban Intelligence Platform</title>
+  
+  <!-- Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- MapLibre GL JS v4 — open source map engine, no API key required -->
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" />
+  
+  <!-- Custom Design System Stylesheet -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="theme-dark">
+  <div id="app" class="app-shell">
+    <!-- Collapsible Operations Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="brand">
+          <div class="brand-logo">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+          </div>
+          <div class="brand-meta">
+            <span class="brand-name">INNOVEXA</span>
+            <span class="brand-tag">URBAN INTELLIGENCE</span>
+          </div>
+        </div>
+        <button class="collapse-toggle" id="collapseSidebar" title="Collapse navigation (Ctrl+B)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <nav class="nav-menu" id="navMenu">
+        <!-- Injected via app.js -->
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sensing-status">
+          <span class="pulse-ring"></span>
+          <div class="sensing-meta">
+            <span class="status-title">LIVE SENSING ACTIVE</span>
+            <span class="status-sub">34 Nodes Transmitting</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="main-container">
+      <!-- Top Persistent Command Bar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle" id="menuToggle" title="Toggle Navigation">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+          
+          <div class="zone-badge">
+            <span class="indicator-dot ok"></span>
+            <span class="zone-name">Bengaluru Metropolitan Zone</span>
+            <span class="zone-tag">PS-26124</span>
+          </div>
+
+          <div class="connection-status" id="connectionStatus">
+            <span class="status-chip live" id="backendBadge">API CONNECTED</span>
+          </div>
+        </div>
+
+        <div class="topbar-center">
+          <button class="global-search-btn" id="globalSearchBtn">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <span>Search events, buses, routes, plates, roads...</span>
+            <kbd class="kbd-shortcut">Ctrl K</kbd>
+          </button>
+        </div>
+
+        <div class="topbar-right">
+          <!-- Demo Flow Quick Selector -->
+          <div class="demo-flows-dropdown">
+            <button class="btn btn-demo" id="demoFlowBtn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+              <span>Demo Flows</span>
+            </button>
+            <div class="dropdown-menu hidden" id="demoFlowMenu">
+              <div class="dropdown-header">SIH EVALUATION DEMO FLOWS</div>
+              <button class="dropdown-item" data-demo="1">
+                <span class="flow-num">1</span>
+                <div>
+                  <strong>Pothole Detection &amp; Civic Verification</strong>
+                  <small>Bus detection → drawer → review → audit</small>
+                </div>
+              </button>
+              <button class="dropdown-item" data-demo="2">
+                <span class="flow-num">2</span>
+                <div>
+                  <strong>Hit-and-Run ANPR &amp; Police Triage</strong>
+                  <small>Tracking vector → OCR candidate → verification</small>
+                </div>
+              </button>
+              <button class="dropdown-item" data-demo="3">
+                <span class="flow-num">3</span>
+                <div>
+                  <strong>Corridor Congestion &amp; Route Delay</strong>
+                  <small>Peak hour surge → heatmap → delay metrics</small>
+                </div>
+              </button>
+              <button class="dropdown-item" data-demo="4">
+                <span class="flow-num">4</span>
+                <div>
+                  <strong>Edge Device Failure &amp; Auto-Recovery</strong>
+                  <small>Telemetry loss alert → diagnostic → recovery</small>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Simulation Pause/Resume -->
+          <button class="icon-action-btn" id="simToggleBtn" title="Toggle Fleet Live Movement Simulation">
+            <span id="simIcon">⏸</span>
+          </button>
+
+          <!-- Presentation Mode Toggle -->
+          <button class="icon-action-btn" id="presentationBtn" title="Toggle Presentation / Fullscreen HUD Mode">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+            </svg>
+          </button>
+
+          <!-- Alert Notification Bell -->
+          <button class="icon-action-btn alert-bell" id="alertBellBtn" title="Active Alerts">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span class="alert-counter" id="topAlertCount">0</span>
+          </button>
+
+          <!-- Live Clock -->
+          <div class="live-clock" id="liveClock">--:--:--</div>
+
+          <!-- Active Role Switcher Avatar -->
+          <button class="role-avatar-btn" id="roleAvatarBtn" title="Switch User Role">
+            <span class="role-initials" id="roleInitials">CO</span>
+            <div class="role-text-meta">
+              <span class="role-name" id="roleName">Control Room</span>
+              <span class="role-agency">BMTC Hub</span>
+            </div>
+          </button>
+        </div>
+      </header>
+
+      <!-- Active Screen View Container -->
+      <main class="view-content" id="viewContent">
+        <!-- Rendered dynamically by app.js -->
+      </main>
+    </div>
+  </div>
+
+  <!-- Contextual Event & Bus Intelligence Drawer -->
+  <div class="intel-drawer" id="intelDrawer" aria-hidden="true">
+    <div class="drawer-header">
+      <div class="drawer-title-group">
+        <span class="drawer-eyebrow" id="drawerEyebrow">EVENT INTELLIGENCE</span>
+        <h3 class="drawer-heading" id="drawerHeading">EVT-2026-0918-0001</h3>
+      </div>
+      <button class="drawer-close-btn" id="drawerCloseBtn" title="Close Drawer">×</button>
+    </div>
+    <div class="drawer-content" id="drawerContent">
+      <!-- Injected dynamically -->
+    </div>
+  </div>
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+
+  <!-- Incident Investigation Workspace Modal -->
+  <div class="modal-backdrop hidden" id="incidentModal">
+    <div class="incident-modal-window" id="incidentModalWindow">
+      <!-- Injected dynamically -->
+    </div>
+  </div>
+
+  <!-- Global Command Palette Modal (Ctrl+K) -->
+  <div class="palette-backdrop hidden" id="commandPalette">
+    <div class="palette-window">
+      <div class="palette-search-box">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="paletteInput" placeholder="Type a command or search events, buses, routes, plates..." autofocus autocomplete="off" />
+        <span class="palette-hint">ESC to exit</span>
+      </div>
+      <div class="palette-results" id="paletteResults">
+        <!-- Injected dynamically -->
+      </div>
+      <div class="palette-footer">
+        <span><kbd>↑</kbd> <kbd>↓</kbd> to navigate</span>
+        <span><kbd>↵</kbd> to select</span>
+        <span><kbd>ESC</kbd> to close</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Role Simulation Modal -->
+  <div class="modal-backdrop hidden" id="roleModal">
+    <div class="role-modal-window">
+      <div class="modal-header">
+        <div>
+          <span class="drawer-eyebrow">STAKEHOLDER ROLE SIMULATION</span>
+          <h3>Select Operational Persona</h3>
+        </div>
+        <button class="modal-close-btn" id="closeRoleModal">×</button>
+      </div>
+      <p class="modal-subtitle">Switch persona to observe role-based interface adaptations, action guards, and workflow permissions.</p>
+      <div class="role-grid" id="roleGrid">
+        <!-- Injected dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Host -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Printable Report Modal Container -->
+  <div class="print-report-container hidden" id="printReportContainer"></div>
+
+  <!-- MapLibre GL JS v4 — open-source, no API key, no Google, no Mapbox -->
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+  
+  <!-- Application GIS Map Engine (MapLibre) -->
+  <script src="map.js"></script>
+  
+  <!-- Application Core Controller -->
+  <script src="app.js"></script>
+</body>
+</html>
